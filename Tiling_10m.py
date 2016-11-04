@@ -16,15 +16,11 @@ import os, sys
 import arcpy
 from arcpy.sa import *
 
-#file_in = arcpy.GetParameterAsText(0)
-file_in = 'E:\\0_preproc_data\\Stura_utm_nd.tif'
-#value = arcpy.GetParameterAsText(1)
-value = 35
-##plugin_location = 'D:\\Geo_processes\\Plugin_Directory\\'
+file_in = arcpy.GetParameterAsText(0)
+value = arcpy.GetParameterAsText(1)
 
-path_out = 'E:\\1_proc_data_10m'
-##arcpy.CreateFolder_management(arcpy.env.scratchFolder, '1_proc_data')
-##path_out = arcpy.env.scratchFolder + '\\1_proc_data'
+arcpy.CreateFolder_management(arcpy.env.scratchFolder, '1_proc_data')
+path_out = arcpy.env.scratchFolder + '\\1_proc_data'
 arcpy.env.workspace = path_out
 arcpy.env.overwriteOutput = True
 
@@ -123,13 +119,8 @@ for i in high:
 
 
 #######
-###### Start Python-Matlab-Bridge Mlab, Calculate Flow Accumulation using orginal DEM Data, prefix "dem"
+###### Calculate Flow Accumulation using orginal DEM Data, prefix "dem"
 #######
-
-##pyscript = '%s\\topotoolbox.py' %(plugin_location)
-##for i in high:
-##    cmd = '%s\\python.exe %s %s %s' %(sys.exec_prefix, pyscript, "%s\\dem%s" %(path_out, str(i)), path_out)
-##    os.system(cmd)
 
 arcpy.AddMessage("Calculation of step 2: Calculating flow accumulation for tiles where slope > 35 degrees occur")
 length = len(high)
@@ -170,6 +161,5 @@ df = arcpy.mapping.ListDataFrames(mxd, "Layers")[0]
 results = arcpy.ListFiles('*ls.tif')
 
 for i in results:
-#    arcpy.ApplySymbologyFromLayer_management(i, "C:\\Users\\stankowski\\ownCloud\\Project_v01\\symbology_srtm.lyr")
-    addLayer = arcpy.mapping.Layer("%s" %(str(i)))
-    arcpy.mapping.AddLayer(df, addLayer, "BOTTOM")
+	addLayer = arcpy.mapping.Layer("%s" %(str(i)))
+	arcpy.mapping.AddLayer(df, addLayer, "BOTTOM")
