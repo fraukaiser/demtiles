@@ -18,11 +18,9 @@ from arcpy.sa import *
 
 file_in = arcpy.GetParameterAsText(0)
 value = arcpy.GetParameterAsText(1)
-##plugin_location = 'D:\\Geo_processes\\Plugin_Directory\\'
 
-path_out = 'F:\\1_proc_data_srtm'
-##arcpy.CreateFolder_management(arcpy.env.scratchFolder, '1_proc_data')
-##path_out = arcpy.env.scratchFolder + '\\1_proc_data'
+arcpy.CreateFolder_management(arcpy.env.scratchFolder, '1_proc_data')
+path_out = arcpy.env.scratchFolder + '\\1_proc_data'
 arcpy.env.workspace = path_out
 arcpy.env.overwriteOutput = True
 
@@ -68,27 +66,27 @@ medium_low = list()
 tiles = arcpy.ListFiles('*.tif')
 for y in[60, 30, 10]:
         for i in tiles:
-            np = arcpy.RasterToNumPyArray(i)
-            if np.max() > int(value) :
-                arcpy.Resample_management(i, "%s_%s.tif" %(str(i)[:-4], str(y)), y , "BILINEAR") # In desperate need of UTM!
-		arcpy.AddMessage("Tile calculated")
-            else:
-                medium_low.append(i)
-            arcpy.Delete_management(i)
-            resampled = arcpy.ListFiles("*_%s.tif" %(str(y)))
-            for i in resampled:
-                fout = "%s_" %(str(i)[:-7])
-                arcpy.SplitRaster_management(i, path_out, fout, "NUMBER_OF_TILES", "TIFF", "BILINEAR", "2 2", "#", "4", "PIXELS", "#", "#")
-                arcpy.Delete_management(i)
-            tiles = arcpy.ListFiles("*.tif")
+		np = arcpy.RasterToNumPyArray(i)
+		if np.max() > int(value) :
+                	arcpy.Resample_management(i, "%s_%s.tif" %(str(i)[:-4], str(y)), y , "BILINEAR") # In desperate need of UTM!
+			arcpy.AddMessage("Tile calculated")
+            	else:
+                	medium_low.append(i)
+            	arcpy.Delete_management(i)
+            	resampled = arcpy.ListFiles("*_%s.tif" %(str(y)))
+            	for i in resampled:
+                	fout = "%s_" %(str(i)[:-7])
+                	arcpy.SplitRaster_management(i, path_out, fout, "NUMBER_OF_TILES", "TIFF", "BILINEAR", "2 2", "#", "4", "PIXELS", "#", "#")
+                	arcpy.Delete_management(i)
+            	tiles = arcpy.ListFiles("*.tif")
 
 tiles = arcpy.ListFiles("*.tif")
 for i in tiles:
-    np = arcpy.RasterToNumPyArray(i)
-    if np.max() > int(value) :
-        high.append(i)
-    else:
-        medium_low.append(i)
+	np = arcpy.RasterToNumPyArray(i)
+	if np.max() > int(value) :
+        	high.append(i)
+	else:
+		medium_low.append(i)
 
 desc = arcpy.Describe(high[0])
 cell = desc.meanCellWidth
@@ -107,13 +105,8 @@ for i in high:
 
 
 #######
-###### Start Python-Matlab-Bridge Mlab
+###### Caclculate Flow Accumulation
 #######
-
-##pyscript = '%s\\topotoolbox.py' %(plugin_location)
-##for i in high:
-##    cmd = '%s\\python.exe %s %s %s' %(sys.exec_prefix, pyscript, "%s\\dem%s" %(path_out, str(i)), path_out)
-##    os.system(cmd)
 
 arcpy.AddMessage("Calculation of step 2: Calculating flow accumulation for tiles where slope > 35 degrees occur")
 length = len(high)
@@ -154,5 +147,5 @@ df = arcpy.mapping.ListDataFrames(mxd, "Layers")[0]
 results = arcpy.ListFiles('*ls.tif')
 
 for i in results:
-    addLayer = arcpy.mapping.Layer("%s" %(str(i)))
-    arcpy.mapping.AddLayer(df, addLayer, "BOTTOM")
+	addLayer = arcpy.mapping.Layer("%s" %(str(i)))
+	arcpy.mapping.AddLayer(df, addLayer, "BOTTOM")
