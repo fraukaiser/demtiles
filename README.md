@@ -7,7 +7,9 @@ By the implementation of a tile structure the digital terrain model is broken in
 resolution in only topographic relevant areas. Afterwards the LS factor of the Revised Universal Soil Loss Equation is calculated on the basis of the detected tiles.
 
 # Requirements
-You will need a version of ArcGIS 10.1 or higher. 
+You will need a version of ArcGIS 10.1 or higher and Python 2.7, which is a standard in the ArcGIS installation.
+
+# Installation 
 
 The Python script »Tiling_highresolution.py« is written in ESRI's arcpy and can be used as a Toolbox in ArcMap. Open the ArcCatalog window within ArcMap, choose Toolboxes -> right click My Toolboxes -> new -> Toolbox. Right click on the new toolbox -> add -> script and select the downloaded "Tiling_highresolution.py" under script file. The last step contains setting your input values. The first parameter can be named "Input File"/ "DEM" and needs to be of the type "File". The second input parameter is the "threshold value" for which you want to conduct the analysis (e.g. show me only tiles in which at least one slope value exceeds 50 °). The type is double.  
 
